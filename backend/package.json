@@ -1,0 +1,24 @@
+{
+  "name": "nextwaveassignment",
+  "version": "1.0.0",
+  "main": "server.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tanishq5414/nextwaveassignment.git"
+  },
+  "keywords": [
+    "to",
+    "do",
+    "application"
+  ],
+  "author": "tanishq agarwal",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/tanishq5414/nextwaveassignment/issues"
+  },
+  "homepage": "https://github.com/tanishq5414/nextwaveassignment#readme",
+  "description": ""
+}
