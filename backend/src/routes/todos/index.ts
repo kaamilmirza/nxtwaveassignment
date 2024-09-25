@@ -1,10 +1,12 @@
 import { Router } from 'express';
-import { authenticateToken } from '../../middleware/authenticate';
-import { getTodos, createTodo } from '../../controllers/todos';
+import { isAuthenticated } from '../../middleware/authenticate';
+import { getTodos, createTodo, updateTodo, deleteTodo } from '../../controllers/todos';
 
 const todoRoutes = Router();
 
-todoRoutes.get('/', authenticateToken, getTodos);
-todoRoutes.post('/', authenticateToken, createTodo);
+todoRoutes.get('/', isAuthenticated, getTodos);
+todoRoutes.post('/', isAuthenticated, createTodo);
+todoRoutes.put('/', isAuthenticated, updateTodo);
+todoRoutes.delete('/', isAuthenticated, deleteTodo);
 
 export default todoRoutes;

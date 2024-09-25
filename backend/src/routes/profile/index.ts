@@ -1,10 +1,10 @@
 import { Router } from 'express';
-import { authenticateToken } from '../../middleware/authenticate';
+import { isAuthenticated } from '../../middleware/authenticate';
 import { getProfile, updateProfile } from '../../controllers/profile';
 
 const profileRoutes = Router();
 
-profileRoutes.get('/', authenticateToken, getProfile);
-profileRoutes.put('/', authenticateToken, updateProfile);
+profileRoutes.get('/', isAuthenticated, getProfile);
+profileRoutes.put('/', isAuthenticated, updateProfile);
 
 export default profileRoutes;

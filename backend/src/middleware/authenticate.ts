@@ -8,7 +8,7 @@ interface JwtPayload {
   userId: string;
 }
 
-export const authenticateToken = (req: Request, res: Response, next: NextFunction) => {
+export const isAuthenticated = (req: Request, res: Response, next: NextFunction) => {
   const authHeader = req.headers.authorization;
   
   if (!authHeader) {
