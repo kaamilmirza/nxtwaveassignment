@@ -1,7 +1,10 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { loginUser } from "@/redux/authActions";
 import { ArrowRight } from "lucide-react";
+import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
+import { useState } from "react";
 
 export default function LoginPage() {
   return (
@@ -19,18 +22,37 @@ export default function LoginPage() {
 }
 
 const LoginForm = () => {
+  const dispatch = useDispatch();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const handleLogin = () => {
+    if (email && password) {
+      console.log("adsf");
+      dispatch(loginUser({ email, password }) as any);
+    }else{
+      alert("Please enter your email and password");
+    }
+  };
+
   return (
-    <form className="space-y-4">
-      <Input type="email" placeholder="Email" />
-      <Input type="password" placeholder="Password" />
-      <Button className="w-full">
+    <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
+      <Input
+        type="email"
+        placeholder="Email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+      />
+      <Input
+        type="password"
+        placeholder="Password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+      />
+      <Button className="w-full" onClick={handleLogin}>
         Log In
         <ArrowRight size={20} className="ml-2" />
       </Button>
       <div className="text-center space-y-2">
-        <a href="#" className="text-sm text-blue-500 hover:underline block">
-          Forgot password?
-        </a>
         <Link to="/signup" className="text-sm text-blue-500 hover:underline block">
           Don't have an account? Sign Up
         </Link>

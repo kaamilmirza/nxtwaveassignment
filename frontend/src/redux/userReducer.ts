@@ -1,41 +1,32 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-interface Todo {
-  id: number;
-  text: string;
+export interface Todo {
+  id: string;
+  title: string;
   completed: boolean;
 }
 
-interface TodoState {
+interface UserState {
   todos: Todo[];
   loading: boolean;
   error: string | null;
 }
 
-const initialState: TodoState = {
+const initialState: UserState = {
   todos: [],
   loading: false,
   error: null,
 };
 
-const todoSlice = createSlice({
-  name: 'todos',
+const userSlice = createSlice({
+  name: 'user',
   initialState,
   reducers: {
-    setLoading: (state, action: PayloadAction<boolean>) => {
-      state.loading = action.payload;
-    },
-    setError: (state, action: PayloadAction<string | null>) => {
-      state.error = action.payload;
-    },
     setTodos: (state, action: PayloadAction<Todo[]>) => {
       state.todos = action.payload;
     },
     addTodo: (state, action: PayloadAction<Todo>) => {
       state.todos.push(action.payload);
-    },
-    removeTodo: (state, action: PayloadAction<number>) => {
-      state.todos = state.todos.filter(todo => todo.id !== action.payload);
     },
     updateTodo: (state, action: PayloadAction<Todo>) => {
       const index = state.todos.findIndex(todo => todo.id === action.payload.id);
@@ -43,8 +34,17 @@ const todoSlice = createSlice({
         state.todos[index] = action.payload;
       }
     },
+    deleteTodo: (state, action: PayloadAction<string>) => {
+      state.todos = state.todos.filter(todo => todo.id !== action.payload);
+    },
+    setLoading: (state, action: PayloadAction<boolean>) => {
+      state.loading = action.payload;
+    },
+    setError: (state, action: PayloadAction<string | null>) => {
+      state.error = action.payload;
+    },
   },
 });
 
-export const { setLoading, setError, setTodos, addTodo, removeTodo, updateTodo } = todoSlice.actions;
-export default todoSlice.reducer;
+export const { setTodos, addTodo, updateTodo, deleteTodo, setLoading, setError } = userSlice.actions;
+export default userSlice.reducer;

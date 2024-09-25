@@ -1,10 +1,11 @@
-import { Router } from 'express';
-import { isAuthenticated } from '../../middleware/authenticate';
-import { getProfile, updateProfile } from '../../controllers/profile';
+import express from 'express';
+import { changePassword, getUserProfile, updateUserProfile } from '../../controllers/profile';
+import { isAuthenticated } from "../../middleware/authenticate";
 
-const profileRoutes = Router();
+const router = express.Router();
 
-profileRoutes.get('/', isAuthenticated, getProfile);
-profileRoutes.put('/', isAuthenticated, updateProfile);
+router.get('/', isAuthenticated, getUserProfile);
+router.put('/', isAuthenticated, updateUserProfile);
+router.put('/password', isAuthenticated, changePassword);
 
-export default profileRoutes;
+export default router;

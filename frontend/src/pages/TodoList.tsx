@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { addTodo, removeTodo, updateTodo } from '../redux/todoReducer';
-import { FaPlus, FaTrash, FaEdit, FaCheck } from 'react-icons/fa';
+import { Plus, Trash, Edit, Check } from 'lucide-react';
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Checkbox } from "@/components/ui/checkbox";
+import { fetchTodos, createTodo, deleteTodo, updateTodoAction, toggleTodoComplete } from '../redux/todoActions';
+import { RootState, AppDispatch } from '../redux/store';
 
 interface Todo {
   id: number;
@@ -14,95 +18,97 @@ const TodoList: React.FC = () => {
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editText, setEditText] = useState('');
 
-    const dispatch = useDispatch();
-    const {todos} = useSelector((state: any) => state.todos);
+  const dispatch = useDispatch<AppDispatch>();
+  const { todos, loading, error } = useSelector((state: RootState) => state.todos);
+
+  useEffect(() => {
+    dispatch(fetchTodos());
+  }, [dispatch]);
 
   const handleAddTodo = () => {
     if (newTodo.trim()) {
-      dispatch(addTodo({ id: Date.now(), text: newTodo, completed: false }));
+      dispatch(createTodo(newTodo));
       setNewTodo('');
     }
   };
 
   const handleRemoveTodo = (id: number) => {
-    dispatch(removeTodo(id));
+    dispatch(deleteTodo(id));
   };
 
   const handleUpdateTodo = (todo: Todo) => {
-    dispatch(updateTodo({ ...todo, text: editText }));
+    dispatch(updateTodoAction({ ...todo, text: editText }));
     setEditingId(null);
   };
 
   const handleToggleComplete = (todo: Todo) => {
-    dispatch(updateTodo({ ...todo, completed: !todo.completed }));
+    dispatch(toggleTodoComplete(todo));
   };
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
 
   return (
     <div className="max-w-md mx-auto mt-10">
       <h1 className="text-2xl font-bold mb-4">Todo List</h1>
-      <div className="flex mb-4">
-        <input
+      <div className="flex mb-4 space-x-2">
+        <Input
           type="text"
           value={newTodo}
           onChange={(e) => setNewTodo(e.target.value)}
-          className="flex-grow p-2 border rounded-l"
           placeholder="Add a new todo"
         />
-        <button
-          onClick={handleAddTodo}
-          className="bg-blue-500 text-white p-2 rounded-r"
-        >
-          <FaPlus />
-        </button>
+        <Button onClick={handleAddTodo} size="icon">
+          <Plus className="h-4 w-4" />
+        </Button>
       </div>
-      <ul>
+      <ul className="space-y-2">
         {todos.map((todo: any) => (
-          <li key={todo.id} className="flex items-center mb-2">
+          <li key={todo.id} className="flex items-center space-x-2">
             {editingId === todo.id ? (
               <>
-                <input
+                <Input
                   type="text"
                   value={editText}
                   onChange={(e) => setEditText(e.target.value)}
-                  className="flex-grow p-2 border rounded-l"
+                  className="flex-grow"
                 />
-                <button
-                  onClick={() => handleUpdateTodo(todo)}
-                  className="bg-green-500 text-white p-2 rounded-r"
-                >
-                  <FaCheck />
-                </button>
+                <Button onClick={() => handleUpdateTodo(todo)} size="icon" variant="outline">
+                  <Check className="h-4 w-4" />
+                </Button>
               </>
             ) : (
               <>
-                <span
+                <Checkbox
+                  checked={todo.completed}
+                  onCheckedChange={() => handleToggleComplete(todo)}
+                  id={`todo-${todo.id}`}
+                />
+                <label
+                  htmlFor={`todo-${todo.id}`}
                   className={`flex-grow ${
                     todo.completed ? 'line-through text-gray-500' : ''
                   }`}
                 >
                   {todo.text}
-                </span>
-                <button
-                  onClick={() => handleToggleComplete(todo)}
-                  className="text-blue-500 p-2"
-                >
-                  <FaCheck />
-                </button>
-                <button
+                </label>
+                <Button
                   onClick={() => {
                     setEditingId(todo.id);
                     setEditText(todo.text);
                   }}
-                  className="text-yellow-500 p-2"
+                  size="icon"
+                  variant="outline"
                 >
-                  <FaEdit />
-                </button>
-                <button
+                  <Edit className="h-4 w-4" />
+                </Button>
+                <Button
                   onClick={() => handleRemoveTodo(todo.id)}
-                  className="text-red-500 p-2"
+                  size="icon"
+                  variant="outline"
                 >
-                  <FaTrash />
-                </button>
+                  <Trash className="h-4 w-4" />
+                </Button>
               </>
             )}
           </li>

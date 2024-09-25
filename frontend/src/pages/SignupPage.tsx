@@ -4,7 +4,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ArrowRight } from "lucide-react";
-// import { signUp } from '../redux/actions/authActions'; // Uncomment when you have this action
+import { signUpUser } from '../redux/authActions';
 
 const SignupPage: React.FC = () => {
   return (
@@ -40,10 +40,20 @@ const SignupForm: React.FC = () => {
     }
 
     try {
-      // Uncomment and adjust when you have the signUp action implemented
-      // await dispatch(signUp({ username, email, password }));
-      // navigate('/login');
-      console.log('Sign up successful'); // Remove this when you implement the actual signup logic
+      if(username === '' || email === '' || password === '') {
+        setError('All fields are required');
+        return;
+      }
+      if(password.length < 8) {
+        setError('Password must be at least 8 characters');
+        return;
+      }
+      if(password !== confirmPassword) {
+        setError('Passwords do not match');
+        return;
+      }
+      await dispatch(signUpUser({ name: username, email, password }) as any);
+      navigate('/login');
     } catch (err) {
       setError('Failed to sign up');
     }
@@ -54,7 +64,7 @@ const SignupForm: React.FC = () => {
       {error && <p className="text-red-500 text-sm">{error}</p>}
       <Input
         type="text"
-        placeholder="Username"
+        placeholder="Name"
         value={username}
         onChange={(e) => setUsername(e.target.value)}
         required
