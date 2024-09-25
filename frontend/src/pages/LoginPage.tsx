@@ -27,7 +27,6 @@ const LoginForm = () => {
   const [password, setPassword] = useState("");
   const handleLogin = () => {
     if (email && password) {
-      console.log("adsf");
       dispatch(loginUser({ email, password }) as any);
     }else{
       alert("Please enter your email and password");
